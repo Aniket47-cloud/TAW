@@ -83,23 +83,9 @@ function PaymentComponent() {
       description: 'Test Transaction',
       order_id: razorpayOrderId,
       handler: async (response) => {
-        const verificationData = {
-          transactionId,
-          razorpayPaymentId: response.razorpay_payment_id,
-          razorpaySignature: response.razorpay_signature
-        };
-
-        try {
-          const verificationResponse = await axios.post(
-            'https://api.testbuddy.live/v1/order/verify',
-            verificationData,
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-          toast.success(verificationResponse.data.msg);
-        } catch (error) {
-          console.error('Error verifying payment:', error.response ? error.response.data : error);
-          toast.error('Payment verification failed.');
-        }
+        toast.success(`Payment successful! Transaction ID: ${transactionId}`);
+        console.log('Payment details:', response);
+        // You can display additional payment details here if needed
       },
       prefill: {
         name,
@@ -139,71 +125,70 @@ function PaymentComponent() {
   };
 
   return (
-<div className="flex items-center justify-center min-h-screen bg-gray-50">
-  <ToastContainer />
-  <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-    <h2 className="text-3xl font-semibold mb-8 text-center text-gray-800">
-      Complete Your Payment
-    </h2>
-    <div className="mb-6">
-      <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="name">
-        Full Name
-      </label>
-      <input
-        id="name"
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        required
-        className="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-        placeholder="Enter your full name"
-      />
-    </div>
-    <div className="mb-6">
-      <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="email">
-        Email Address
-      </label>
-      <input
-        id="email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        className="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
-        placeholder="Enter your email address"
-      />
-    </div>
-    <div className="mb-8">
-      <label className="inline-flex items-center">
-        <input
-          type="checkbox"
-          checked={isGift}
-          onChange={(e) => setIsGift(e.target.checked)}
-          className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 transition duration-200"
-        />
-        <span className="ml-3 text-sm text-gray-600">This is a gift</span>
-      </label>
-    </div>
-    <button
-      onClick={handlePayment}
-      className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition duration-200"
-      disabled={isLoading}
-    >
-      {isLoading ? (
-        <div className="flex items-center justify-center">
-          <svg className="animate-spin h-5 w-5 text-white mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 017-7.93V4a8 8 0 100 16v-1.07A8 8 0 014 12z"></path>
-          </svg>
-          Processing...
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <ToastContainer />
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
+        <h2 className="text-3xl font-semibold mb-8 text-center text-gray-800">
+          Complete Your Payment
+        </h2>
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="name">
+            Full Name
+          </label>
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            className="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+            placeholder="Enter your full name"
+          />
         </div>
-      ) : (
-        'Pay Now'
-      )}
-    </button>
-  </div>
-</div>
-
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2" htmlFor="email">
+            Email Address
+          </label>
+          <input
+            id="email"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200"
+            placeholder="Enter your email address"
+          />
+        </div>
+        <div className="mb-8">
+          <label className="inline-flex items-center">
+            <input
+              type="checkbox"
+              checked={isGift}
+              onChange={(e) => setIsGift(e.target.checked)}
+              className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 transition duration-200"
+            />
+            <span className="ml-3 text-sm text-gray-600">This is a gift</span>
+          </label>
+        </div>
+        <button
+          onClick={handlePayment}
+          className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-lg shadow-md hover:from-blue-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 transition duration-200"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <div className="flex items-center justify-center">
+              <svg className="animate-spin h-5 w-5 text-white mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 017-7.93V4a8 8 0 100 16v-1.07A8 8 0 014 12z"></path>
+              </svg>
+              Processing...
+            </div>
+          ) : (
+            'Pay Now'
+          )}
+        </button>
+      </div>
+    </div>
   );
 }
 
